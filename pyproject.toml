@@ -1,0 +1,36 @@
+[project]
+name = "ultrapips"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "talg" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "tusa",
+    "timm>=1.0.12",
+    "segment-anything",
+    "einops>=0.8.1",
+    "sparsemax>=0.1.9",
+    "open-clip-torch>=3.3.0",
+    "transformers>=5.7.0",
+    "echogains",
+    "nibabel>=5.4.2",
+]
+
+[build-system]
+requires = ["uv_build>=0.9.22,<0.10.0"]
+build-backend = "uv_build"
+
+[tool.uv.sources]
+tusa = { git = "https://github.com/talg2324/tusa.git" }
+segment-anything = { git = "https://github.com/facebookresearch/segment-anything.git" }
+echogains = { git = "https://github.com/GillesVanDeVyver/EchoGAINS.git" }
+
+[tool.uv.workspace]
+members = [
+    "experiments",
+    ".",
+    "experiments/assets/data/covid19_ultrasound/pocovidnet",
+]
