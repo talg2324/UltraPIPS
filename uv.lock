@@ -497,30 +497,34 @@ name = "experiments"
 version = "0.1.0"
 source = { virtual = "experiments" }
 dependencies = [
+    { name = "echogains" },
     { name = "gdown" },
     { name = "jupyter" },
     { name = "lpips" },
     { name = "monai" },
+    { name = "nibabel" },
     { name = "opencv-python-headless" },
     { name = "openpyxl" },
     { name = "pandas" },
     { name = "pytorch-msssim" },
     { name = "tqdm" },
-    { name = "ultrapips" },
+    { name = "ultrapips", extra = ["all"] },
 ]
 
 [package.metadata]
 requires-dist = [
+    { name = "echogains", git = "https://github.com/GillesVanDeVyver/EchoGAINS.git" },
     { name = "gdown", specifier = ">=5.2.1" },
     { name = "jupyter", specifier = ">=1.1.1" },
     { name = "lpips", specifier = ">=0.1.4" },
     { name = "monai", specifier = ">=1.5.2" },
+    { name = "nibabel", specifier = ">=5.4.2" },
     { name = "opencv-python-headless", specifier = ">=4.13.0.90" },
     { name = "openpyxl", specifier = ">=3.1.5" },
     { name = "pandas", specifier = ">=3.0.0" },
     { name = "pytorch-msssim", specifier = ">=1.0.0" },
     { name = "tqdm", specifier = ">=4.67.3" },
-    { name = "ultrapips", editable = "." },
+    { name = "ultrapips", extras = ["all"], editable = "." },
 ]
 
 [[package]]
@@ -3001,29 +3005,49 @@ name = "ultrapips"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
-    { name = "echogains" },
-    { name = "einops" },
-    { name = "nibabel" },
+    { name = "timm" },
+    { name = "torch" },
+    { name = "torchvision" },
+]
+
+[package.optional-dependencies]
+all = [
+    { name = "monai" },
     { name = "open-clip-torch" },
     { name = "segment-anything" },
-    { name = "sparsemax" },
-    { name = "timm" },
+    { name = "tqdm" },
     { name = "transformers" },
+    { name = "tusa" },
+]
+clip = [
+    { name = "open-clip-torch" },
+    { name = "transformers" },
+]
+fid = [
+    { name = "monai" },
+    { name = "tqdm" },
+]
+medsam = [
+    { name = "segment-anything" },
+]
+tusa = [
     { name = "tusa" },
 ]
 
 [package.metadata]
 requires-dist = [
-    { name = "echogains", git = "https://github.com/GillesVanDeVyver/EchoGAINS.git" },
-    { name = "einops", specifier = ">=0.8.1" },
-    { name = "nibabel", specifier = ">=5.4.2" },
-    { name = "open-clip-torch", specifier = ">=3.3.0" },
-    { name = "segment-anything", git = "https://github.com/facebookresearch/segment-anything.git" },
-    { name = "sparsemax", specifier = ">=0.1.9" },
+    { name = "monai", marker = "extra == 'fid'", specifier = ">=1.5.2" },
+    { name = "open-clip-torch", marker = "extra == 'clip'", specifier = ">=3.3.0" },
+    { name = "segment-anything", marker = "extra == 'medsam'", git = "https://github.com/facebookresearch/segment-anything.git" },
     { name = "timm", specifier = ">=1.0.12" },
-    { name = "transformers", specifier = ">=5.7.0" },
-    { name = "tusa", git = "https://github.com/talg2324/tusa.git" },
+    { name = "torch" },
+    { name = "torchvision" },
+    { name = "tqdm", marker = "extra == 'fid'" },
+    { name = "transformers", marker = "extra == 'clip'", specifier = ">=5.7.0" },
+    { name = "tusa", marker = "extra == 'tusa'", git = "https://github.com/talg2324/tusa.git" },
+    { name = "ultrapips", extras = ["tusa", "medsam", "clip", "fid"], marker = "extra == 'all'" },
 ]
+provides-extras = ["tusa", "medsam", "clip", "fid", "all"]
 
 [[package]]
 name = "uri-template"

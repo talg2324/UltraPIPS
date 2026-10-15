@@ -1,5 +1,8 @@
 import torch
-from segment_anything import sam_model_registry
+try:
+    from segment_anything import sam_model_registry
+except ImportError as e:
+    raise ImportError("The MedSAM backbone requires the `medsam` extra: pip install 'ultrapips[medsam]'") from e
 
 from .base import UltrasoundImageEncoder
 from .utils import ImageNormalizer

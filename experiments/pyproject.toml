@@ -5,17 +5,20 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "echogains",
     "gdown>=5.2.1",
     "jupyter>=1.1.1",
     "lpips>=0.1.4",
     "monai>=1.5.2",
+    "nibabel>=5.4.2",
     "opencv-python-headless>=4.13.0.90",
     "openpyxl>=3.1.5",
     "pandas>=3.0.0",
     "pytorch-msssim>=1.0.0",
     "tqdm>=4.67.3",
-    "ultrapips",
+    "ultrapips[all]",
 ]
 
 [tool.uv.sources]
 ultrapips = { workspace = true }
+echogains = { git = "https://github.com/GillesVanDeVyver/EchoGAINS.git" }

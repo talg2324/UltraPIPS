@@ -1,5 +1,8 @@
 import torch
-from tusa.texture import tusa_unet
+try:
+    from tusa.texture import tusa_unet
+except ImportError as e:
+    raise ImportError("The TUSA backbone requires the `tusa` extra: pip install 'ultrapips[tusa]'") from e
 
 from .utils import ImageNormalizer
 from .base import UltrasoundImageEncoder

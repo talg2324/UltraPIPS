@@ -1,5 +1,8 @@
 import torch
-import open_clip
+try:
+    import open_clip
+except ImportError as e:
+    raise ImportError("CLIP backbones require the `clip` extra: pip install 'ultrapips[clip]'") from e
 
 from .utils import ImageNormalizer
 from .base import UltrasoundImageEncoder

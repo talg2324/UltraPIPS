@@ -22,13 +22,27 @@ We recommend using `uv`.
 uv add git+https://github.com/talg2324/UltraPIPS.git
 ```
 
+The core install only covers the `usfm`, `vit_imagenet` and `swin_imagenet` backbones. The other backbones need an extra:
+
+| Extra    | Enables                                    |
+|----------|--------------------------------------------|
+| `tusa`   | `tusa_vit`                                 |
+| `medsam` | `medsam`                                   |
+| `clip`   | `clip`, `biomedclip`, `ultrasound_clip`    |
+| `fid`    | `ultrapips.fid`                            |
+| `all`    | All of the above                           |
+
+```bash
+uv add "ultrapips[tusa] @ git+https://github.com/talg2324/UltraPIPS.git"
+```
+
 ## Usage
 
 ```python
 import torch
 from ultrapips import UltraPIPS
 
-# Default backbone: TUSA (weights are bundled with the tusa package)
+# TUSA backbone (needs the `tusa` extra; weights are bundled with the tusa package)
 loss_fn = UltraPIPS(backbone="tusa_vit")
 
 # Inputs: (B, C, H, W), float32 in [0, 1] or uint8. 1- or 3-channel.

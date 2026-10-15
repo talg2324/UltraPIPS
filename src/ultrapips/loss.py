@@ -3,12 +3,6 @@ from enum import Enum
 import torch
 import torch.nn as nn
 
-from .backbones.clip import CLIPBackbone
-from .backbones.medsam import MedSAMBackbone
-from .backbones.usfm_vit import USFMBackbone
-from .backbones.tusa import TUSA_SwinViTBackbone
-from .backbones.torchvision import ViTImageNetBackbone, SwinImageNetBackbone
-
 
 class BackboneType(str, Enum):
     USFM = "usfm"
@@ -28,7 +22,7 @@ class UltraPIPS(nn.Module):
 
     def __init__(
         self,
-        backbone: str | BackboneType = BackboneType.TUSA_VIT,
+        backbone: str | BackboneType,
         model_path: str | None = None,
         reduction: str = "mean",
     ):
@@ -39,16 +33,22 @@ class UltraPIPS(nn.Module):
             backbone = BackboneType(backbone.lower())
 
         if backbone == BackboneType.USFM:
+            from .backbones.usfm_vit import USFMBackbone
             self.encoder = USFMBackbone(weights_path=model_path)
         elif backbone == BackboneType.MEDSAM:
+            from .backbones.medsam import MedSAMBackbone
             self.encoder = MedSAMBackbone(weights_path=model_path)
         elif backbone == BackboneType.TUSA_VIT:
+            from .backbones.tusa import TUSA_SwinViTBackbone
             self.encoder = TUSA_SwinViTBackbone(weights_path=model_path)
         elif backbone == BackboneType.VIT_IMAGENET:
+            from .backbones.torchvision import ViTImageNetBackbone
             self.encoder = ViTImageNetBackbone(weights_path=model_path)
         elif backbone == BackboneType.SWIN_IMAGENET:
+            from .backbones.torchvision import SwinImageNetBackbone
             self.encoder = SwinImageNetBackbone(weights_path=model_path)
         elif backbone in [BackboneType.CLIP, BackboneType.BIOMEDCLIP, BackboneType.ULTRASOUND_CLIP]:
+            from .backbones.clip import CLIPBackbone
             self.encoder = CLIPBackbone(model_type=backbone.value, weights_path=model_path)
         else:
             raise ValueError(f"Unknown backbone type: {backbone}")
