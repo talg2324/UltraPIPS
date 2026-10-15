@@ -60,8 +60,9 @@ class FID(nn.Module):
         Args:
             x, y: iterables of image batches (see `stats`) or precomputed FIDStats.
         """
-        from monai.metrics.fid import compute_frechet_distance
-
         x = x if isinstance(x, FIDStats) else self.stats(x)
         y = y if isinstance(y, FIDStats) else self.stats(y)
-        return compute_frechet_distance(x.mu, x.sigma, y.mu, y.sigma).item()
+
+        # Tr(sqrtm(Sx @ Sy)) as the sum of sqrt eigenvalues of Sx @ Sy, as in torchmetrics' _compute_fid
+        tr_covmean = torch.linalg.eigvals(x.sigma @ y.sigma).sqrt().real.sum()
+        return ((x.mu - y.mu).square().sum() + x.sigma.trace() + y.sigma.trace() - 2 * tr_covmean).item()

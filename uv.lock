@@ -3012,7 +3012,6 @@ dependencies = [
 
 [package.optional-dependencies]
 all = [
-    { name = "monai" },
     { name = "open-clip-torch" },
     { name = "segment-anything" },
     { name = "tqdm" },
@@ -3024,7 +3023,6 @@ clip = [
     { name = "transformers" },
 ]
 fid = [
-    { name = "monai" },
     { name = "tqdm" },
 ]
 medsam = [
@@ -3036,7 +3034,6 @@ tusa = [
 
 [package.metadata]
 requires-dist = [
-    { name = "monai", marker = "extra == 'fid'", specifier = ">=1.5.2" },
     { name = "open-clip-torch", marker = "extra == 'clip'", specifier = ">=3.3.0" },
     { name = "segment-anything", marker = "extra == 'medsam'", git = "https://github.com/facebookresearch/segment-anything.git" },
     { name = "timm", specifier = ">=1.0.12" },
