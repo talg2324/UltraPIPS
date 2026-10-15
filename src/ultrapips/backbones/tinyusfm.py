@@ -51,15 +51,19 @@ class TinyUSFMBackbone(UltrasoundImageEncoder):
             for prefix in ('module.', 'model.'):
                 if k.startswith(prefix):
                     k = k[len(prefix):]
-            # Head / final norms are unused: we take raw block outputs
-            if k.startswith(('head', 'fc_norm', 'norm.')):
+            # Head is unused; the final norm is kept for embed()
+            if k.startswith(('head', 'fc_norm')):
                 continue
             cleaned[k] = v
 
         missing, _ = self.model.load_state_dict(cleaned, strict=False)
-        missing = [k for k in missing if not k.startswith(('head', 'fc_norm', 'norm.'))]
+        missing = [k for k in missing if not k.startswith(('head', 'fc_norm'))]
         if missing:
             raise RuntimeError(f"TinyUSFM checkpoint is missing backbone weights: {missing}")
+
+    def embed(self, x: torch.Tensor) -> torch.Tensor:
+        # forward_features applies the final norm; take the CLS token
+        return self.model.forward_features(self.normalizer(x))[:, 0]
 
     def forward(self, x: torch.Tensor) -> list[torch.Tensor]:
         x = self.normalizer(x)

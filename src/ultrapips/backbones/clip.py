@@ -76,6 +76,10 @@ class CLIPBackbone(UltrasoundImageEncoder):
         else:
             raise ValueError(f"Unknown CLIP model type: {model_type}")
 
+    def embed(self, x: torch.Tensor) -> torch.Tensor:
+        # Projected image embedding (final norm -> CLS token -> proj), same as encode_image
+        return self.model(self.normalizer(x))
+
     def forward(self, x: torch.Tensor) -> list[torch.Tensor]:
         x = self.normalizer(x)
         features = []

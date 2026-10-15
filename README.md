@@ -74,6 +74,31 @@ loss_fn = UltraPIPS(backbone="usfm", model_path="weights/USFM.pt")
 
 The AlexNet, VGG-16 and RadImageNet baselines in the paper come from the original [`lpips`](https://github.com/richzhang/PerceptualSimilarity) package and [MONAI](https://docs.monai.io/en/stable/losses.html#perceptualloss). They are not wrapped here.
 
+### FID
+
+`FID` computes the Fréchet distance between two image sets in a backbone's embedding space (needs the `fid` extra). It takes the same backbones as `UltraPIPS`. Inputs are iterables of image batches in the same format, typically a `DataLoader`.
+
+```python
+from torch.utils.data import DataLoader
+from ultrapips import FID
+
+fid = FID(backbone="usfm", model_path="weights/USFM.pt")
+score = fid(DataLoader(set_a, batch_size=32), DataLoader(set_b, batch_size=32))
+```
+
+Embedding the images is the expensive part. To compare one set against many, compute its statistics once and pass them in place of the images:
+
+```python
+stats_a = fid.stats(DataLoader(set_a, batch_size=32))  # FIDStats(mu, sigma)
+scores = [fid(stats_a, DataLoader(s, batch_size=32)) for s in other_sets]
+
+torch.save(stats_a, "set_a_usfm.pt")  # stats are only comparable within the same backbone
+```
+
+Each set needs more images than the backbone's embedding dimension (e.g. 768 for `usfm`), otherwise the covariance is degenerate and `FID` raises an error.
+
+The embedding is the backbone's global image representation: the final-norm CLS token for `usfm` and `tinyusfm`, the projected image embedding for the CLIP backbones, and the mean-pooled last stage for `tusa_vit`.
+
 ### Reproducing the paper
 
 The code for the classification (EchoPrime), segmentation (UltraSam) and INR experiments is in [experiments/](experiments/).

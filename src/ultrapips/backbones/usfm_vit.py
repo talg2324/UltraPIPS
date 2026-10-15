@@ -69,6 +69,10 @@ class USFMBackbone(UltrasoundImageEncoder):
 
         return formatted_features
 
+    def embed(self, x: torch.Tensor) -> torch.Tensor:
+        # VisionTransformer.forward: final norm -> CLS token -> head (Identity)
+        return self.model(self.normalizer(x))
+
 
 class Mlp(nn.Module):
     def __init__(

@@ -3,6 +3,8 @@ from enum import Enum
 import torch
 import torch.nn as nn
 
+from .backbones.base import UltrasoundImageEncoder
+
 
 class BackboneType(str, Enum):
     USFM = "usfm"
@@ -14,6 +16,35 @@ class BackboneType(str, Enum):
     CLIP = "clip"
     BIOMEDCLIP = "biomedclip"
     ULTRASOUND_CLIP = "ultrasound_clip"
+
+
+def build_encoder(backbone: str | BackboneType, model_path: str | None = None) -> UltrasoundImageEncoder:
+    if isinstance(backbone, str):
+        backbone = BackboneType(backbone.lower())
+
+    if backbone == BackboneType.USFM:
+        from .backbones.usfm_vit import USFMBackbone
+        return USFMBackbone(weights_path=model_path)
+    elif backbone == BackboneType.TINYUSFM:
+        from .backbones.tinyusfm import TinyUSFMBackbone
+        return TinyUSFMBackbone(weights_path=model_path)
+    elif backbone == BackboneType.MEDSAM:
+        from .backbones.medsam import MedSAMBackbone
+        return MedSAMBackbone(weights_path=model_path)
+    elif backbone == BackboneType.TUSA_VIT:
+        from .backbones.tusa import TUSA_SwinViTBackbone
+        return TUSA_SwinViTBackbone(weights_path=model_path)
+    elif backbone == BackboneType.VIT_IMAGENET:
+        from .backbones.torchvision import ViTImageNetBackbone
+        return ViTImageNetBackbone(weights_path=model_path)
+    elif backbone == BackboneType.SWIN_IMAGENET:
+        from .backbones.torchvision import SwinImageNetBackbone
+        return SwinImageNetBackbone(weights_path=model_path)
+    elif backbone in [BackboneType.CLIP, BackboneType.BIOMEDCLIP, BackboneType.ULTRASOUND_CLIP]:
+        from .backbones.clip import CLIPBackbone
+        return CLIPBackbone(model_type=backbone.value, weights_path=model_path)
+    else:
+        raise ValueError(f"Unknown backbone type: {backbone}")
 
 
 class UltraPIPS(nn.Module):
@@ -29,33 +60,7 @@ class UltraPIPS(nn.Module):
     ):
         super().__init__()
         self.reduction = reduction
-
-        if isinstance(backbone, str):
-            backbone = BackboneType(backbone.lower())
-
-        if backbone == BackboneType.USFM:
-            from .backbones.usfm_vit import USFMBackbone
-            self.encoder = USFMBackbone(weights_path=model_path)
-        elif backbone == BackboneType.TINYUSFM:
-            from .backbones.tinyusfm import TinyUSFMBackbone
-            self.encoder = TinyUSFMBackbone(weights_path=model_path)
-        elif backbone == BackboneType.MEDSAM:
-            from .backbones.medsam import MedSAMBackbone
-            self.encoder = MedSAMBackbone(weights_path=model_path)
-        elif backbone == BackboneType.TUSA_VIT:
-            from .backbones.tusa import TUSA_SwinViTBackbone
-            self.encoder = TUSA_SwinViTBackbone(weights_path=model_path)
-        elif backbone == BackboneType.VIT_IMAGENET:
-            from .backbones.torchvision import ViTImageNetBackbone
-            self.encoder = ViTImageNetBackbone(weights_path=model_path)
-        elif backbone == BackboneType.SWIN_IMAGENET:
-            from .backbones.torchvision import SwinImageNetBackbone
-            self.encoder = SwinImageNetBackbone(weights_path=model_path)
-        elif backbone in [BackboneType.CLIP, BackboneType.BIOMEDCLIP, BackboneType.ULTRASOUND_CLIP]:
-            from .backbones.clip import CLIPBackbone
-            self.encoder = CLIPBackbone(model_type=backbone.value, weights_path=model_path)
-        else:
-            raise ValueError(f"Unknown backbone type: {backbone}")
+        self.encoder = build_encoder(backbone, model_path)
 
     def _normalize(self, x: torch.Tensor, eps: float = 1e-10) -> torch.Tensor:
         """Unit normalize features along channel dimension."""
