@@ -6,6 +6,7 @@ import torch.nn as nn
 
 class BackboneType(str, Enum):
     USFM = "usfm"
+    TINYUSFM = "tinyusfm"
     MEDSAM = "medsam"
     TUSA_VIT = "tusa_vit"
     VIT_IMAGENET = "vit_imagenet"
@@ -35,6 +36,9 @@ class UltraPIPS(nn.Module):
         if backbone == BackboneType.USFM:
             from .backbones.usfm_vit import USFMBackbone
             self.encoder = USFMBackbone(weights_path=model_path)
+        elif backbone == BackboneType.TINYUSFM:
+            from .backbones.tinyusfm import TinyUSFMBackbone
+            self.encoder = TinyUSFMBackbone(weights_path=model_path)
         elif backbone == BackboneType.MEDSAM:
             from .backbones.medsam import MedSAMBackbone
             self.encoder = MedSAMBackbone(weights_path=model_path)

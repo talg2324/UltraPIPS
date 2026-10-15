@@ -58,6 +58,9 @@ class LossFunction(nn.Module):
         elif loss_metric == 'usfm':
             self.additional_loss = UltraPIPS(BackboneType.USFM, 'assets/weights/USFM.pt')
 
+        elif loss_metric == 'tinyusfm':
+            self.additional_loss = UltraPIPS(BackboneType.TINYUSFM, 'assets/weights/TinyUSFM.pth')
+
         elif loss_metric == 'tusa_vit':
             self.additional_loss = UltraPIPS(BackboneType.TUSA_VIT)
 

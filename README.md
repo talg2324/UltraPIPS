@@ -22,7 +22,7 @@ We recommend using `uv`.
 uv add git+https://github.com/talg2324/UltraPIPS.git
 ```
 
-The core install only covers the `usfm`, `vit_imagenet` and `swin_imagenet` backbones. The other backbones need an extra:
+The core install only covers the `usfm`, `tinyusfm`, `vit_imagenet` and `swin_imagenet` backbones. The other backbones need an extra:
 
 | Extra    | Enables                                    |
 |----------|--------------------------------------------|
@@ -60,6 +60,7 @@ Resizing, channel conversion and normalization for each backbone are handled int
 |-------------------|------------|----------------------------------------------------------------------------------------------------------------------------|
 | `tusa_vit`        | Ultrasound | Bundled with [talg2324/tusa](https://github.com/talg2324/tusa) — no download needed                                        |
 | `usfm`            | Ultrasound | Download from [openmedlab/USFM](https://github.com/openmedlab/USFM), pass as `model_path`                                  |
+| `tinyusfm`        | Ultrasound | Download `TinyUSFM.pth` from [MacDunno/TinyUSFM](https://github.com/MacDunno/TinyUSFM), pass as `model_path`                |
 | `ultrasound_clip` | Ultrasound | Download from [ZJUDataIntelligence/Ultrasound-CLIP](https://github.com/ZJUDataIntelligence/Ultrasound-CLIP), pass as `model_path` |
 | `biomedclip`      | Radiology  | Auto-downloaded from [Hugging Face](https://huggingface.co/microsoft/BiomedCLIP-PubMedBERT_256-vit_base_patch16_224)        |
 | `medsam`          | Radiology  | Download `medsam_vit_b.pth` from [bowang-lab/MedSAM](https://github.com/bowang-lab/MedSAM), pass as `model_path`            |

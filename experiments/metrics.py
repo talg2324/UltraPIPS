@@ -76,8 +76,8 @@ def get_monai_lpips(network_type, is_fake_3d=False):
 def metrics_list(model_name):
     backbones = {
         'usfm': 'assets/weights/USFM.pt',
+        'tinyusfm': 'assets/weights/TinyUSFM.pth',
         'medsam': 'assets/weights/MedSAM.pt',
-        'tusa_logits': None,
         'tusa_vit': None,
         'vit_imagenet': None,
         'swin_imagenet': None,
